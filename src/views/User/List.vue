@@ -59,7 +59,7 @@
   import { cacheAdapterEnhancer } from 'axios-extensions';
  
   const http = axios.create({
-      baseURL: 'https://localhost:7282/api',
+      baseURL: 'http://127.0.0.1:8090/api/',
       withCredentials: false,
       headers: {
         Accept: 'application/json',
@@ -83,10 +83,12 @@
     },
     methods: {
       getUsers() {
-        // this.$request.get('https://localhost:7282/api/User').then(res => {
-        //   console.log(res.data)
-        // })
-        http.get('/User');
+        this.$request.get('http://localhost:8090/api/users').then(res => {
+          console.log(res.data)
+        })
+        // http.get('users').then(res => {
+        //    console.log(res.data);
+        // });
       }
     }
   }
