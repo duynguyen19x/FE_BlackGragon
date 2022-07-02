@@ -10,28 +10,31 @@
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
+              <th scope="col">Code</th>
+              <th scope="col">Name</th>
+              <th scope="col">Address</th>
+              <th scope="col">GenderId</th>
+              <th scope="col">PhoneNumber</th>
+              <th scope="col">Password</th>
+              <th scope="col">UserType</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
-              <td>@twitter</td>
+            <tr :key="index" v-for="(user, index) in users">
+              <th scope="row">{{ user.Id }}</th>
+              <td>{{ user.Code }}</td>
+              <td>{{ user.Name }}</td>
+              <td>{{ user.Address }}</td>
+              <td>
+                <select v-model="user.GenderId">
+                  <option value="1">Nam</option>
+                  <option value="2">Nữ</option>
+                  <option value="3">Khác</option>
+                </select>
+              </td>
+              <td>{{ user.PhoneNumber }}</td>
+              <td>{{ user.Password }}</td>
+              <td>{{ user.UserType }}</td>
             </tr>
           </tbody>
         </table>
@@ -55,27 +58,10 @@
 </style>
 
 <script>
-  import axios from 'axios';
-  import { cacheAdapterEnhancer } from 'axios-extensions';
- 
-  const http = axios.create({
-      baseURL: 'http://127.0.0.1:8090/api/',
-      withCredentials: false,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        "Access-Control-Allow-Methods": "DELETE, POST, PUT, GET, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
-        'Authorization': ''
-      },
-      adapter: cacheAdapterEnhancer(axios.defaults.adapter)
-  });
-
   export default {
     data() {
       return {
-        user: []
+        users: [],
       }
     },
     created() {
@@ -83,12 +69,10 @@
     },
     methods: {
       getUsers() {
-        this.$request.get('http://localhost:8090/api/users').then(res => {
-          console.log(res.data)
+        this.$request.get('http://127.0.0.1:8090/api/users').then(res => {
+          this.users = res.data.result;
+          console.log(res.data.result);
         })
-        // http.get('users').then(res => {
-        //    console.log(res.data);
-        // });
       }
     }
   }
