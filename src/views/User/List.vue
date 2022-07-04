@@ -26,15 +26,20 @@
               <td>{{ user.Name }}</td>
               <td>{{ user.Address }}</td>
               <td>
-                <select v-model="user.GenderId">
-                  <option value="1">Nam</option>
-                  <option value="2">Nữ</option>
-                  <option value="3">Khác</option>
+                <select disabled v-model="user.GenderId">
+                  <option value="1">Male</option>
+                  <option value="2">Female</option>
+                  <option value="3">Other</option>
                 </select>
               </td>
               <td>{{ user.PhoneNumber }}</td>
               <td>{{ user.Password }}</td>
-              <td>{{ user.UserType }}</td>
+              <td>
+                <select disabled v-model="user.UserType">
+                  <option value="1">Administrator</option>
+                  <option value="2">User</option>
+                </select>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -70,8 +75,8 @@
     methods: {
       getUsers() {
         this.$request.get('http://127.0.0.1:8090/api/users').then(res => {
-          this.users = res.data.result;
-          console.log(res.data.result);
+          this.users = res.data.result.users;
+          console.log(res.data.result.users);
         })
       }
     }

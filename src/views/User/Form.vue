@@ -6,74 +6,80 @@
       </div>
 
       <div class="container">
+        <!-- <form @submit.prevent="Save()"> -->
         <form>
           <fieldset>
             <div id="id" class="row" hidden>
-                <label class="col-sm-2 col-form-label">ID</label>
+                <label class="col-sm-2 col-form-label">Id</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="UserId" id="txtUserId">
+                    <input v-model="user.Id" type="text" class="form-control" name="UserId" id="txtUserId">
                 </div>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Mã người dùng: </label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="UserCode" id="txtUserCode" tabindex="1">
+                    <input @blur="validate()" v-bind:class="{'is-invalid': errors.Code}" v-model="user.Code" type="text" class="form-control" tabindex="1">
+                    <div class="invalid-feedback">{{ errors.Code }}</div>
                 </div>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Tên người dùng: </label>
                 <div class="col-sm-10">
-                    <input id="txtUsername" class="form-control" name="UserName" value="">
+                    <input @blur="validate()" v-bind:class="{'is-invalid': errors.Name}" v-model="user.Name" class="form-control">
+                    <div class="invalid-feedback">{{ errors.Name }}</div>
                 </div>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Giới tính: </label>
                 <div class="col-sm-10">
-                    <select class="form-control" id="txtGender" name="Gender">
-                        <option value="1">Nam</option>
-                        <option value="2">Nữ</option>
-                        <option value="3">Khác</option>
+                    <select @blur="validate()" v-bind:class="{'is-invalid': errors.GenderId}" v-model="user.GenderId" class="form-control">
+                        <option value="1">Male</option>
+                        <option value="2">Female</option>
+                        <option value="3">Other</option>
                     </select>
+                    <div class="invalid-feedback">{{ errors.GenderId }}</div>
                 </div>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Địa chỉ: </label>
                 <div class="col-sm-10">
-                    <input id="txtAddress" class="form-control" name="Address" value="">
+                    <input v-model="user.Address" class="form-control">
                 </div>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Email: </label>
                 <div class="col-sm-10">
-                    <input id="txtEmail" class="form-control" name="Email" value="">
+                    <input v-model="user.Email" class="form-control" type="email">
                 </div>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Số điện thoại: </label>
                 <div class="col-sm-10">
-                    <input id="txtPhoneNumber" class="form-control" name="PhoneNumber" value="">
+                    <input v-model="user.PhoneNumber" class="form-control">
                 </div>
             </div>
-            <div class="row" hidden>
+            <div class="row">
                 <label class="col-sm-2 col-form-label">Mật khẩu: </label>
                 <div class="col-sm-10">
-                    <input id="txtPassword" class="form-control" name="Password" type="password" value="">
+                    <input @blur="validate()" v-bind:class="{'is-invalid': errors.Password}" v-model="user.Password" class="form-control" type="password">
+                    <div class="invalid-feedback">{{ errors.Password }}</div>
                 </div>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Loại tài khoản: </label>
                 <div class="col-sm-10">
-                    <select class="form-control" id="txtUserType" name="Gender">
+                    <select @blur="validate()" v-bind:class="{'is-invalid': errors.UserType}" v-model="user.UserType" class="form-control">
                         <option value="1">Admin</option>
                         <option value="2">Manager</option>
                         <option value="3">Member</option>
                     </select>
+                    <div class="invalid-feedback">{{ errors.UserType }}</div>
                 </div>
             </div>
           </fieldset>
 
           <div class="row div-right">
-            <button type="button" class="btn btn-primary col-sm-1 " id="btnSave">Save</button>
+            <button type="button" v-on:click="Save" class="btn btn-primary col-sm-1" id="btnSave">Save</button>
             <button type="button" class="btn btn-danger col-sm-1" id="btnCancel">Cancel</button>  
           </div>
         </form>
@@ -121,10 +127,90 @@
 </style>
 
 <script>
+  import { uuid } from 'vue-uuid'; 
+
   export default {
     data() {
       return {
-        
+        errors: {
+          Code: null,
+          Name: null,
+          Address: null,
+          GenderId: 0,
+          PhoneNumber: null,
+          Password: null,
+          UserType: 0
+        },
+
+        user: {
+          Id: null,
+          Code: null,
+          Name: null,
+          Address: null,
+          GenderId: 0,
+          PhoneNumber: null,
+          Password: null,
+          UserType: 0
+        }
+      }
+    },
+    methods: {
+      validate() {
+        let isValid = true
+
+        this.errors = {
+          Code: null,
+          Name: null,
+          Address: null,
+          GenderId: 0,
+          PhoneNumber: null,
+          Password: null,
+          UserType: 0
+        };
+
+        if(!this.user.Code) {
+          this.errors.Code = "User code is required";
+          isValid = false;
+        }
+
+        if(!this.user.Name) {
+          this.errors.Name = "User name is required";
+          isValid = false;
+        }
+
+        if(this.user.GenderId <= 0) {
+          this.errors.GenderId = "User gender is required";
+          isValid = false;
+        }
+
+        if(!this.user.Password) {
+          this.errors.Password = "User password is required";
+          sValid = false;
+        }
+
+        if(this.user.UserType <= 0) {
+          this.errors.UserType = "User userType is required";
+          isValid = false;
+        }
+
+        return isValid;
+      },
+
+      Save() {
+        if(this.validate()) {
+
+        var ssss = this.$uuid.v4();
+        console.log(ssss);
+
+        if(!this.user.Id)
+          console.log(ssss);
+
+          // this.user.Id = this.$uuid.v4;
+
+          // this.$request.post('http://127.0.0.1:8090/api/user', this.user).then(res => {
+          //   console.log(res.data);
+          // });
+        }
       }
     }
   }
