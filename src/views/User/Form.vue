@@ -127,8 +127,6 @@
 </style>
 
 <script>
-  import { uuid } from 'vue-uuid'; 
-
   export default {
     data() {
       return {
@@ -143,7 +141,7 @@
         },
 
         user: {
-          Id: null,
+          Id: 0,
           Code: null,
           Name: null,
           Address: null,
@@ -198,20 +196,13 @@
 
       Save() {
         if(this.validate()) {
-
-        var ssss = this.$uuid.v4();
-        console.log(ssss);
-
-        if(!this.user.Id)
-          console.log(ssss);
-
-          // this.user.Id = this.$uuid.v4;
-
-          // this.$request.post('http://127.0.0.1:8090/api/user', this.user).then(res => {
-          //   console.log(res.data);
-          // });
+          if(this.user.Id == 0) {
+            this.$request.post('http://127.0.0.1:8090/api/user', this.user).then(res => {
+              console.log(res.data);
+            })
+          }
         }
-      }
+      },
     }
   }
 </script>
